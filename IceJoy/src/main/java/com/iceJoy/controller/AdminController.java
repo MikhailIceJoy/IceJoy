@@ -6,14 +6,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by mikhail on 10.04.2016.
+ * Created by user on 21.05.2016.
  */
 @Controller
-public class HomeController {
+public class AdminController {
 
-    @RequestMapping(value = {"/", "/home"}, method = RequestMethod.GET)
-    public ModelAndView doHome() {
-        return new ModelAndView("home");
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public ModelAndView home () {
+        return new ModelAndView("admin");
     }
 
 }
+
+
+
