@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:sec="http://www.springframework.org/schema/security"
+             xsi:schemaLocation="
+      http://www.springframework.org/schema/security
+      http://www.springframework.org/schema/security/spring-security-3.1.xsd
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+    <!--<global-method-security secured-annotations="enabled" />-->
+
+    <http auto-config="true" use-expressions="true">
+        <access-denied-handler error-page="/error403" />
+        <intercept-url pattern="/admin" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/profile" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/main" access="permitAll" />
+        <form-login
+                login-page="/login"
+                default-target-url="/profile"
+                authentication-failure-url="/login?error"/>
+        <logout logout-success-url="/login?logout" />
+        <anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />
+    </http>
+
+    <authentication-manager>
+        <authentication-provider>
+            <user-service>
+                <user name="user" password="user" authorities="ROLE_USER" />
+                <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
+            </user-service>
+        </authentication-provider>
+        <!--<authentication-provider user-service-ref="userService"/>-->
+    </authentication-manager>
+
+    <!--<beans:bean id="userService" class="com.iceJoy.session.UserService"/>-->
+
+</beans:beans>
