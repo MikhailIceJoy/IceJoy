@@ -26,12 +26,12 @@
 
     <authentication-manager>
         <authentication-provider>
-            <user-service>
-                <user name="user" password="user" authorities="ROLE_USER" />
-                <user name="admin" password="admin" authorities="ROLE_USER,ROLE_ADMIN" />
-            </user-service>
+            <jdbc-user-service data-source-ref="dataSource"
+                               users-by-username-query=
+                                       "select username,password, enabled from users where username=?"
+                               authorities-by-username-query=
+                                       "select username, role from user_roles where username =?  " />
         </authentication-provider>
-        <!--<authentication-provider user-service-ref="userService"/>-->
     </authentication-manager>
 
     <!--<beans:bean id="userService" class="com.iceJoy.session.UserService"/>-->

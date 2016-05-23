@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by mikhail on 10.04.2016.
+ * Created by user on 10.04.2016.
  */
 @Controller
 public class HomeController {

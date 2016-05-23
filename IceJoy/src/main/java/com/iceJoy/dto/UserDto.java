@@ -5,13 +5,12 @@ import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 
 /**
- * Created by mikhail on 18.04.2016.
+ * Created by user on 18.04.2016.
  */
 public class UserDto {
 
     private String name;
     private String password;
-
     private Collection<? extends GrantedAuthority> roles;
 
     public String getName() {

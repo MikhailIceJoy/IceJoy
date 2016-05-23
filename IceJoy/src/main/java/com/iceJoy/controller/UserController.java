@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * Created by mikhail on 18.04.2016.
+ * Created by user on 18.04.2016.
  */
 @Controller
 public class UserController {
