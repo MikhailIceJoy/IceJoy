@@ -1,12 +1,44 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+       http://www.springframework.org/schema/data/jpa
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!--<tx:annotation-driven mode="aspectj" proxy-target-class="true" />-->
 
     <bean id="liquibase" class="liquibase.integration.spring.SpringLiquibase">
         <property name="dataSource" ref="dataSource" />
         <property name="changeLog" value="WEB-INF/db/db-incremental.xml" />
         <property name="contexts" value="test, production" />
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+        <!--<property name="dataSource" ref="dataSource"/>-->
+        <!--<property name="defaultTimeout" value="${jpa.default.timeout}"/>-->
+    </bean>
+
+    <bean id="entityManagerFactory"
+          class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitManager" ref="persistenceUnitManager"/>
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter" />
+        <property name="jpaPropertyMap">
+            <props>
+                <prop key="hibernate.id.new_generator_mappings">false</prop>
+            </props>
+        </property>
+
     </bean>
 
     <bean id="dataSource"
@@ -17,4 +49,26 @@
           <property name="password" value="root"/>
     </bean>
 
+    <bean id="jpaVendorAdapter"
+          class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="database" value="MYSQL"/>
+        <property name="showSql" value="true"/>
+        <property name="generateDdl" value="false"/>
+        <property name="databasePlatform"
+                  value="org.hibernate.dialect.MySQLDialect" />
+    </bean>
+
+    <bean id="persistenceUnitManager" class="org.springframework.data.jpa.support.MergingPersistenceUnitManager">
+        <property name="packagesToScan">
+            <list>
+                <value>com.iceJoy.entity</value>
+            </list>
+        </property>
+        <property name="defaultDataSource" ref="dataSource"/>
+    </bean>
+
 </beans>
+
+        <!--<property name="jpaDialect">-->
+        <!--<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>-->
+        <!--</property>-->

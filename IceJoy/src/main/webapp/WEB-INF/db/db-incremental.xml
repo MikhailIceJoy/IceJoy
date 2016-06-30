@@ -7,34 +7,37 @@
 
        <changeSet id="1" author="user">
            <sql>
+               <!--Таблица пользователей-->
                CREATE  TABLE users (
+               user_id INT(10) NOT NULL AUTO_INCREMENT,
                username VARCHAR(45) NOT NULL,
                password VARCHAR(45) NOT NULL,
                enabled TINYINT NOT NULL DEFAULT 1,
-               PRIMARY KEY (username));
+               PRIMARY KEY (user_id));
            </sql>
            <sql>
+               <!--Таблица ролей пользователей-->
                CREATE TABLE user_roles (
-               user_role_id int(10) NOT NULL AUTO_INCREMENT,
-               username varchar(45) NOT NULL,
+               user_role_id INT(10) NOT NULL AUTO_INCREMENT,
                role varchar(45) NOT NULL,
+               id_user INT(10) NOT NULL,
                PRIMARY KEY (user_role_id),
-               UNIQUE KEY uni_username_role (role,username),
-               KEY fk_username_idx (username),
-               CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users (username));
+               CONSTRAINT fk_id_user FOREIGN KEY (id_user) REFERENCES users (user_id));
            </sql>
            <sql>
+               <!--Вставка администратора и тестового юзура-->
+               <!--admin/admin, user/user-->
                INSERT INTO users(username,password,enabled)
                VALUES ('admin','admin', true);
                INSERT INTO users(username,password,enabled)
                VALUES ('user','user', true);
 
-               INSERT INTO user_roles (username, role)
-               VALUES ('admin', 'ROLE_USER');
-               INSERT INTO user_roles (username, role)
-               VALUES ('admin', 'ROLE_ADMIN');
-               INSERT INTO user_roles (username, role)
-               VALUES ('user', 'ROLE_USER');
+               INSERT INTO user_roles (role, id_user)
+               VALUES ('ROLE_USER', (select user_id FROM users WHERE username = 'admin' limit 1));
+               INSERT INTO user_roles (role, id_user)
+               VALUES ('ROLE_ADMIN', (select user_id FROM users WHERE username = 'admin' limit 1));
+               INSERT INTO user_roles (role, id_user)
+               VALUES ('ROLE_USER', (select user_id FROM users WHERE username = 'user' limit 1));
            </sql>
        </changeSet>
 </databaseChangeLog>
